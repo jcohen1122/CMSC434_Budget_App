@@ -23,9 +23,22 @@ body {
     grid-row: 1;
 }
 
+h1 {
+    font-size: 2rem;
+}
+
 .balance_box {
     font-size: 2rem;
     height: 4rem;
     width: 20rem;
     border: 3px solid black;
+}
+
+button {
+    background-color: gold;
+    border: 3px solid black;
+}
+
+button:hover {
+    background-color: red;
 }
