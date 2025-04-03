@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Create Savings Goal - Budget Tracker</title>
+  <style>
+    body {
+      font-family: "Lato", sans-serif;
+      font-size: 15px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .device {
+      padding: 1rem;
+      margin: auto;
+      width: 640px;
+      height: 960px;
+      overflow: hidden;
+      background-color: rgb(255, 201, 201);
+      border: 5px solid black;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .tab_heading {
+      font-size: 2.4rem;
+      font-weight: bold;
+      margin-top: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      font-size: 2rem;
+      margin-top: 1rem;
+      margin-bottom: 0.3rem;
+      display: block;
+    }
+
+    .input_box {
+      font-size: 2rem;
+      height: 4rem;
+      width: 20rem;
+      border: 3px solid black;
+      margin-bottom: 1rem;
+    }
+
+    button {
+      background-color: gold;
+      border: 3px solid black;
+      font-size: 2rem;
+      padding: 0.5rem 2rem;
+      margin-top: 2rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: red;
+    }
+
+    .summary {
+      font-size: 1.8rem;
+      margin-top: 3rem;
+      text-align: center;
+    }
+
+    .progress-bar {
+      width: 300px;
+      height: 30px;
+      background-color: #ddd;
+      border: 2px solid black;
+      margin-top: 1rem;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 40%;
+      background-color: #6fdc6f;
+      text-align: center;
+      color: black;
+      line-height: 30px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="device">
+    <h1 class="tab_heading">Create Savings Goal</h1>
+
+    <label for="goalName">Goal Name:</label>
+    <input type="text" id="goalName" name="goalName" placeholder="e.g., Europe Trip" class="input_box" />
+
+    <label for="targetAmount">Target Amount ($):</label>
+    <input type="number" id="targetAmount" name="targetAmount" placeholder="e.g., 1500" class="input_box" />
+
+    <label for="targetDate">Target Date:</label>
+    <input type="date" id="targetDate" name="targetDate" class="input_box" />
+
+    <button>Save Goal</button>
+
+    <div class="summary">
+      <h2 style="margin-top: 3rem;">Current Progress</h2>
+      <p>$600 saved out of $1500</p>
+      <div class="progress-bar">
+        <div class="progress-fill">40%</div>
+      </div>
+      <p>You need ~$100/week to stay on track.</p>
+    </div>
+  </div>
+</body>
+</html>
