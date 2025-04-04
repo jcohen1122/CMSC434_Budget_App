@@ -9,17 +9,16 @@
 <body>
     <div class = "device">
         <h1 class = "tab_heading">Welcome, CMSC434 Student!</h1>
-        <p style="grid-row: 3; grid-column: 1; font-size: 2rem;">Income&nbsp</p>
+        <h2>Income&nbsp</h2>
         <!-- Will change value to pull from user's manually inputted income -->
-        <input type="text" value = "$100,000" style="grid-row: 3; grid-column: 2 / 10" class = "balance_box" readonly>
+        <input type="text" value = "$100,000" class = "balance_box" readonly>
         <!-- Will change value to pull from user's manually inputted income -->
-        <p style="grid-row: 5; grid-column: 1; font-size: 2rem;">Expenses&nbsp</p>
+        <h2>Expenses&nbsp</h2>
         <input type="text" value = "$20,000" style="grid-row: 5; grid-column: 2 / 10" class = "balance_box" readonly>
-        <p style="grid-row: 6; grid-column: 1; font-size: 2rem;">Remaining Budget&nbsp</p>
-        <input type="text" value="$80,000" style="grid-row: 6; grid-column: 2 / 10; background-color: #d7ffd9;" class="balance_box" readonly>
-        <h1 style="grid-row: 7; grid-column: 1 / 19; font-size: 2rem;">Doesn't look up to date? Update your income and expenses!</h1>
-        <button style="grid-row: 8; grid-column: 1 / 5; font-size: 2rem;" onclick="window.location.href='update_income.html'">Update Income</button>
-        <button style="grid-row: 8; grid-column: 6 / 17; font-size: 2rem;" onclick="window.location.href='add_expense.html'">Update Expenses</button>
+        <h2>Remaining Budget&nbsp</h2>
+        <input type="text" value="$80,000" style="background-color: #d7ffd9;" class="balance_box" readonly>
+        <button onclick="window.location.href='update_income.html'">Update Income</button>
+        <button onclick="window.location.href='add_expense.html'">Update Expenses</button>
     </div>
 </body>
 </html>

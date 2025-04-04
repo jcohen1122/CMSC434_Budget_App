@@ -1,6 +1,7 @@
 body {
     font-family: "Lato", sans-serif;
     font-size: 15px;
+    color: #102542;
 }
 
 .device {
@@ -9,11 +10,12 @@ body {
     width: 640px;
     height: 960px;
     overflow: hidden;
-    background-color: rgb(255, 201, 201);
+    background-color: #C3DBEA;
     border: 5px solid black;
-    display: grid;
-    grid-template-columns: repeat(19, 1fr);
-    grid-template-rows: repeat(19, 1fr);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
 }
 
 .tab_heading {
@@ -23,26 +25,41 @@ body {
     grid-row: 1;
 }
 
+label {
+    font-size: 2rem;
+    margin-top: 1rem;
+    margin-bottom: 0.3rem;
+    display: block;
+}
+
 h1 {
     font-size: 2rem;
 }
 
-.balance_box {
-    font-size: 2rem;
-    height: 4rem;
-    width: 20rem;
-    border: 3px solid black;
+h2 {
+    font-size: 1.8rem;
 }
 
+.balance_box,
+    select {
+      font-size: 2rem;
+      height: 4rem;
+      width: 20rem;
+      border: 3px solid black;
+      margin-bottom: 1rem;
+    }
+
 button {
-    background-color: gold;
+    background-color: #102542;
     border: 3px solid black;
     font-size: 2rem;
     padding: 0.5rem 2rem;
     margin-top: 2rem;
     cursor: pointer;
+    color: white;
   }
 
   button:hover {
-    background-color: red;
+    background-color: #CDD7D6;
+    color: #102542
   }
