@@ -5,10 +5,96 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Add Expense - Budget Tracker</title>
   <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Scrollable container for the bills */
+    .bill_scroll_container {
+      width: 100%;
+      height: 55%;
+      overflow-y: auto;
+      padding-bottom: 8rem; /* Prevents overlap with nav bar */
+    }
+
+    .bill_block {
+      background-color: white;
+      border: 3px solid #102542;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      width: 90%;
+      box-shadow: 4px 4px 0px #102542;
+    }
+
+    .bill_date {
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin-bottom: 0.8rem;
+    }
+
+    .bill_info {
+      font-size: 1.6rem;
+      margin: 0.4rem 0;
+    }
+  </style>
 </head>
 <body>
   <div class="device">
     <h1 class="tab_heading">Bill Tracker</h1>
+
+    <div class="bill_scroll_container">
+      <div class="bill_block">
+        <div class="bill_date">April 5, 2025</div>
+        <div class="bill_info">Rent — $1,200</div>
+        <div class="bill_info">Repeats Monthly: ✅</div>
+      </div>
+      <div class="bill_block">
+        <div class="bill_date">April 12, 2025</div>
+        <div class="bill_info">Phone Bill — $80</div>
+        <div class="bill_info">Repeats Monthly: ✅</div>
+      </div>
+      <div class="bill_block">
+        <div class="bill_date">April 20, 2025</div>
+        <div class="bill_info">Electric Bill — $100</div>
+        <div class="bill_info">Repeats Monthly: ✅</div>
+      </div>
+      <div class="bill_block">
+        <div class="bill_date">April 25, 2025</div>
+        <div class="bill_info">Game Subscription — $15</div>
+        <div class="bill_info">Repeats Monthly: ✅</div>
+      </div>
+      <div class="bill_block">
+        <div class="bill_date">May 1, 2025</div>
+        <div class="bill_info">Internet — $60</div>
+        <div class="bill_info">Repeats Monthly: ✅</div>
+      </div>
+      <div class="bill_block">
+        <div class="bill_date">May 10, 2025</div>
+        <div class="bill_info">Car Maintenance — $300</div>
+        <div class="bill_info">Repeats Monthly: ❌</div>
+      </div>
+      <div class="bill_block">
+        <div class="bill_date">May 18, 2025</div>
+        <div class="bill_info">Gym Membership — $45</div>
+        <div class="bill_info">Repeats Monthly: ✅</div>
+      </div>
+      <div class="bill_block">
+        <div class="bill_date">June 1, 2025</div>
+        <div class="bill_info">Rent — $1,200</div>
+        <div class="bill_info">Repeats Monthly: ✅</div>
+      </div>
+      <div class="bill_block">
+        <div class="bill_date">June 12, 2025</div>
+        <div class="bill_info">Phone Bill — $80</div>
+        <div class="bill_info">Repeats Monthly: ✅</div>
+      </div>
+      <div class="bill_block">
+        <div class="bill_date">June 23, 2025</div>
+        <div class="bill_info">Course Subscription — $100</div>
+        <div class="bill_info">Repeats Monthly: ❌</div>
+      </div>
+    </div>
+
+    <br>
+    <button>Add Bill</button>
 
     <div class = "tabcontainer">
       <button onclick="window.location.href='budget.html'">
