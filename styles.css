@@ -71,3 +71,24 @@ button:hover {
     width: 100%;
     text-align: center;
 }
+.tabcontainer {
+    position: absolute;
+    bottom: 7.5%;
+    width: 100%;
+    text-align: center;
+}
+.progress-bar {
+    width: 90%;
+    height: 20px;
+    background-color: #ddd;
+    border-radius: 10px;
+    margin: 1rem auto;
+    overflow: hidden;
+  }
+  
+  .progress-bar-color {
+    height: 100%;
+    background-color: #4CAF50; 
+    width: 0;
+  }
+  
