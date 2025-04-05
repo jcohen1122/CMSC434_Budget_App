@@ -6,9 +6,67 @@
   <title>Add Expense - Budget Tracker</title>
   <link rel="stylesheet" href="styles.css">
 </head>
+<style>
+  .tabcontainer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+.tabcontainer button {
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+  /* Scrollable container for the bills */
+  .bill_scroll_container {
+    width: 100%;
+    height: 55%;
+    overflow-y: auto;
+    padding-bottom: 8rem; /* Prevents overlap with nav bar */
+  }
+
+  .bill_block {
+    background-color: white;
+    border: 3px solid #102542;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    width: 90%;
+    box-shadow: 4px 4px 0px #102542;
+  }
+
+  .bill_date {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 0.8rem;
+  }
+
+  .bill_info {
+    font-size: 1.6rem;
+    margin: 0.4rem 0;
+  }
+</style>
 <body>
   <div class="device">
     <h1 class="tab_heading">Set Your Budget</h1>
+    <div class="bill_scroll_container">
+      <div class="bill_block">
+        <div class="Weekly Budget">Weekly Budget</div>
+        <div class="bill_info">Amount Spent — $1,200</div>
+        <div class="bill_info">Repeats Weekly: ✅</div>
+      </div>
+            <div class="bill_block">
+            <div class="Monthly Budget">Montly Budget</div>
+            <div class="bill_info">Amount Spent — $5,000</div>
+            <div class="bill_info">Repeats Monthly: ✅</div>
+          </div>
 
     <div class = "tabcontainer">
       <button onclick="window.location.href='budget.html'">
@@ -27,6 +85,11 @@
           <img src="icons/bills.png" alt="Home" width="75px">
       </button>
     </div>
+    <p style="font-size: 1.8rem;">You are this close to your goals:</p>
+    <div class="progress-bar">
+      <div class="progress-bar-color" style="width: 60%;"></div>
+    </div>
+    
   </div>
 </body>
 </html>
