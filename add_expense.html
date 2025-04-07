@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Add Expense - Budget Tracker</title>
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
   <div class="device">
     <h1 class="tab_heading">Add a New Expense</h1>
@@ -25,28 +27,74 @@
     </select>
 
     <label for="description">Description:</label>
-    <input type="text" id="description" name="description" placeholder="e.g., Dinner at restaurant" class="balance_box" />
+    <input type="text" id="description" name="description" placeholder="e.g., Dinner at restaurant"
+      class="balance_box" />
 
-    <button>Submit Expense</button>
+    <button id="submitExpense">Submit Expense</button>
     <br>
-    <button>View Expenses</button>
-    <div class = "tabcontainer">
+    <button onclick="window.location.href='view_expenses.html'">View Expenses</button>
+
+    <div class="tabcontainer">
       <button onclick="window.location.href='budget.html'">
-          <img src="icons/budget.png" alt="Home" width="75px">
+        <img src="icons/budget.png" alt="Home" width="75px">
       </button>
       <button onclick="window.location.href='update_income.html'">
-          <img src="icons/income.png" alt="Home" width="75px">
+        <img src="icons/income.png" alt="Home" width="75px">
       </button>
       <button onclick="window.location.href='index.html'">
-          <img src="icons/home.png" alt="Home" width="75px">
+        <img src="icons/home.png" alt="Home" width="75px">
       </button>
       <button onclick="window.location.href='add_expense.html'">
-          <img src="icons/expense.png" alt="Home" width="125px">
+        <img src="icons/expense.png" alt="Home" width="125px">
       </button>
       <button onclick="window.location.href='bill_tracker.html'">
-          <img src="icons/bills.png" alt="Home" width="75px">
+        <img src="icons/bills.png" alt="Home" width="75px">
       </button>
+    </div>
   </div>
-  </div>
+
+  <script>
+    function getExpenses() {
+      return JSON.parse(localStorage.getItem("expense_history")) || [];
+    }
+
+    function saveExpenses(expenses) {
+      localStorage.setItem("expense_history", JSON.stringify(expenses));
+    }
+
+    // UPON SUBMISSION...
+
+    document.getElementById("submitExpense").onclick = function () {
+      const amount = parseFloat(document.getElementById("amount").value);
+      const category = document.getElementById("category").value;
+      const description = document.getElementById("description").value;
+
+      // CONFIRM ALL FIELDS ARE VALID
+      if (isNaN(amount) || amount <= 0 || !category) {
+        alert("Please enter a valid amount and select a category.");
+        return;
+      }
+
+      // CREATAE NEW EXPENSE OBJECT
+      const newExpense = {
+        amount: amount,
+        category: category,
+        description: description,
+        date: new Date().toISOString()
+      };
+
+      // ADD NEW EXPENSE TO LOCAL STORAGE
+      const expenses = getExpenses();
+      expenses.push(newExpense);
+      saveExpenses(expenses);
+
+      // RESET FIELDS
+      document.getElementById("amount").value = '';
+      document.getElementById("category").value = '';
+      document.getElementById("description").value = '';
+
+      alert("Expense saved!");
+    };
+  </script>
 </body>
 </html>

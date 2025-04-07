@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>View Expenses - Budget Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="device">
+        <h1 class="tab_heading">Expense Overview</h1>
+
+        <h2>Expenses by Category</h2>
+        <canvas id="expenseChart" width="300" height="300" style="margin-bottom: 30px;"></canvas>
+
+        <h2>Expense History</h2>
+        <div id="expenseList" style="max-height: 200px; overflow-y: auto;"></div>
+
+        <div class="tabcontainer">
+            <button onclick="window.location.href='budget.html'">
+                <img src="icons/budget.png" alt="Budget" width="75px">
+            </button>
+            <button onclick="window.location.href='update_income.html'">
+                <img src="icons/income.png" alt="Income" width="75px">
+            </button>
+            <button onclick="window.location.href='index.html'">
+                <img src="icons/home.png" alt="Home" width="75px">
+            </button>
+            <button onclick="window.location.href='add_expense.html'">
+                <img src="icons/expense.png" alt="Expense" width="125px">
+            </button>
+            <button onclick="window.location.href='bill_tracker.html'">
+                <img src="icons/bills.png" alt="Bills" width="75px">
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function getExpenses() {
+            return JSON.parse(localStorage.getItem("expense_history")) || [];
+        }
+
+        function drawChart() {
+            const expenses = getExpenses();
+            const summary = {};
+
+            // BREAK DOWN INTO INDIVIDUAL CATEGORIES
+            expenses.forEach(exp => {
+                if (summary[exp.category]) {
+                    summary[exp.category] += exp.amount;
+                } else {
+                    summary[exp.category] = exp.amount;
+                }
+            });
+
+            const labels = Object.keys(summary);
+            const data = Object.values(summary);
+
+            if (labels.length === 0) {
+                document.getElementById("expenseChart").replaceWith("No expenses to display yet");
+                return;
+            }
+
+            new Chart(document.getElementById("expenseChart"), {
+                type: "pie",
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: ["#ffff84", "#36A2EB", "#FFCE56", "#8AFFC1", "#ff84cf", "#A66DD4"],
+                        borderColor: "#fff",
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                    }
+                }
+            });
+        }
+
+        // DISPLAY EXPENSES BELOW CHART
+        function showExpenses() {
+            const list = document.getElementById("expenseList");
+            const expenses = getExpenses();
+
+            if (expenses.length === 0) {
+                list.innerHTML = "<p>No expenses yet.</p>";
+                return;
+            }
+
+            // MAP EXPENSES TO CORRECT FORMATTING
+            list.innerHTML = expenses.map(e => `
+            <div style="border-bottom: 1px solid #ccc; padding: 8px;">
+            <strong>$${e.amount.toFixed(2)}</strong> - ${e.category}<br>
+            <small>${e.description || "No description"}<br>${new Date(e.date).toLocaleString()}</small>
+            </div>
+        `).join('');
+        }
+
+        window.onload = function () {
+            drawChart();
+            showExpenses();
+        };
+    </script>
+</body>
+</html>
