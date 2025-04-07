@@ -6,17 +6,27 @@
     <title>Home - Budget Tracker</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+<script>
+    window.onload = function () {
+        const saved = localStorage.getItem("user_income");
+        document.querySelector("#income_box").value = Number(saved).toFixed(2) || "Nothing saved yet.";
+
+        const expenses = document.querySelector("#expenses").value;
+        const net = Number(saved).toFixed(2) - Number(expenses).toFixed(2);
+        document.querySelector("#net").value = net.toFixed(2);
+    };
+</script>
 <body>
     <div class = "device">
         <p class = "tab_heading">Welcome, User!</p>
         <h1>Income&nbsp</h1>
         <!-- Will change value to pull from user's manually inputted income -->
-        <input type="text" value = "$100,000" class = "balance_box" readonly>
+        <input type="text" value = "100000.00" id = "income_box" class = "balance_box" readonly>
         <!-- Will change value to pull from user's manually inputted income -->
         <h1>Expenses&nbsp</h1>
-        <input type="text" value = "$20,000" class = "balance_box" readonly>
+        <input type="text" value = "20000.00" id = "expenses" class = "balance_box" readonly>
         <h1>Remaining Budget&nbsp</h1>
-        <input type="text" value="$80,000" style="background-color: #d7ffd9;" class="balance_box" readonly>
+        <input type="text" value = "80000.00" id = "net" style="background-color: #d7ffd9;" class="balance_box" readonly>
         <div class = "tabcontainer">
             <button onclick="window.location.href='budget.html'">
                 <img src="icons/budget.png" alt="Home" width="75px">
