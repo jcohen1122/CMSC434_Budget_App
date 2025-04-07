@@ -8,12 +8,18 @@
 </head>
 <script>
     window.onload = function () {
-        const saved = localStorage.getItem("user_income");
-        document.querySelector("#income_box").value = Number(saved).toFixed(2) || "Nothing saved yet.";
-
-        const expenses = document.querySelector("#expenses").value;
-        const net = Number(saved).toFixed(2) - Number(expenses).toFixed(2);
-        document.querySelector("#net").value = net.toFixed(2);
+        // INCOME
+        const savedIncome = localStorage.getItem("user_income");
+        const income = Number(savedIncome) || 0;
+        document.querySelector("#income_box").value = income.toFixed(2);
+    
+        // EXPENSES
+        const expenses = JSON.parse(localStorage.getItem("expense_history")) || [];
+        const totalExpenses = expenses.reduce((sum, exp) => sum + Number(exp.amount), 0);
+        document.querySelector("#expenses").value = totalExpenses.toFixed(2);
+    
+        // REMAINING BUDGET
+        document.querySelector("#net").value = (income - totalExpenses).toFixed(2);
     };
 </script>
 <body>
