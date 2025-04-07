@@ -6,9 +6,6 @@
     <title>Bill Tracker - Budget Tracker</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-      * {
-    box-sizing: border-box;
-}
 
 .bill_scroll_container {
     overflow-x: hidden; 
@@ -32,7 +29,7 @@
             border-radius: 10px;
             padding: 1.2rem;
             margin: 1rem 0;
-            width: 100%;
+            width: 70%;
             box-shadow: 4px 4px 0px #102542;
         }
 
@@ -144,5 +141,39 @@
             </button>
         </div>
     </div>
+    <script>
+        window.onload = () => {
+          const form = document.getElementById("billForm");
+          const container = document.getElementById("billContainer");
+          let bills = JSON.parse(localStorage.getItem("bills") || "[]");
+    
+          const addBill = (bill) => {
+            const block = document.createElement("div");
+            block.className = "bill_block";
+            block.innerHTML = `
+              <div class="bill_date">Due: ${new Date(bill.date).toLocaleDateString()}</div>
+              <div class="bill_info">${bill.name} — $${parseFloat(bill.amount).toFixed(2)}</div>
+              <div class="bill_info">Repeats Monthly: ${bill.repeats ? "✅" : "❌"}</div>
+            `;
+            container.appendChild(block);
+          };
+    
+          bills.forEach(addBill);
+    
+          form.onsubmit = (e) => {
+            e.preventDefault();
+            const bill = {
+              date: billDate.value,
+              name: billName.value,
+              amount: billAmount.value,
+              repeats: billRepeats.checked
+            };
+            bills.push(bill);
+            localStorage.setItem("bills", JSON.stringify(bills));
+            addBill(bill);
+            form.reset();
+          };
+        };
+      </script>
 </body>
 </html>
