@@ -1,179 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bill Tracker - Budget Tracker</title>
-    <link rel="stylesheet" href="styles.css">
-    <style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bill Tracker - Budget Tracker</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .flow {
+      width: 90%;
+      height: 30%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-bottom: 8rem;
+      margin-top: 0.5rem;
+    }
 
-.bill_scroll_container {
-    overflow-x: hidden; 
-}
+    .bill_info_box {
+      background-color: white;
+      border: 3px solid #102542;
+      border-radius: 10px;
+      padding: 1.2rem;
+      margin: 1rem 0;
+      width: 70%;
+      box-shadow: 4px 4px 0px #102542;
+      position: relative;
+    }
 
-.bill_block {
-    width: 100%; 
-}
+    .bill_date {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
 
-        .bill_scroll_container {
-            width: 90%;
-            height: 30%;
-            overflow-y: auto;
-            padding-bottom: 8rem;
-            margin-top: 0.5rem;
-        }
+    .bill_info {
+      font-size: 1rem;
+      margin: 0.3rem 0;
+    }
 
-        .bill_block {
-            background-color: white;
-            border: 3px solid #102542;
-            border-radius: 10px;
-            padding: 1.2rem;
-            margin: 1rem 0;
-            width: 70%;
-            box-shadow: 4px 4px 0px #102542;
-        }
+    .remove-bill {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.6rem;
+      font-size: 0.9rem;
+      padding: 0.3rem 0.5rem;
+      background-color: #4f8bd9;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
 
-        .bill_date {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
+    form {
+      width: 90%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      background-color: white;
+      padding: 0.8rem;
+      border-radius: 10px;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+      margin-top: 0.5rem;
+    }
 
-        .bill_info {
-            font-size: 1rem;
-            margin: 0.3rem 0;
-        }
+    label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-top: 0.3rem;
+    }
 
-        form {
-            width: 90%;
-            display: flex;
-            flex-direction: column;
-            gap: 0.6rem;
-            background-color: white;
-            padding: 0.8rem;
-            border-radius: 10px;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-            margin-top: 0.5rem;
-        }
-
-        label {
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-top: 0.3rem;
-        }
-
-        input[type="text"],
-        input[type="number"],
-        input[type="date"] {
-            font-size: 0.9rem;
-            padding: 0.4rem;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-    </style>
+    input[type="text"],
+    input[type="number"],
+    input[type="date"] {
+      font-size: 0.9rem;
+      padding: 0.4rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+  </style>
 </head>
-<script>
-    window.onload = function () {
-        const form = document.getElementById("billForm");
-        const container = document.getElementById("billContainer");
-
-        form.addEventListener("submit", function (e) {
-            e.preventDefault();
-
-            const date = document.getElementById("billDate").value;
-            const name = document.getElementById("billName").value;
-            const amount = document.getElementById("billAmount").value;
-            const repeats = document.getElementById("billRepeats").checked;
-
-            const billBlock = document.createElement("div");
-            billBlock.className = "bill_block";
-
-            billBlock.innerHTML = `
-                <div class="bill_date">Due: ${new Date(date).toLocaleDateString()}</div>
-                <div class="bill_info">${name} — $${parseFloat(amount).toFixed(2)}</div>
-                <div class="bill_info">Repeats Monthly: ${repeats ? "✅" : "❌"}</div>
-            `;
-
-            container.appendChild(billBlock);
-            form.reset();
-        });
-    };
-</script>
 <body>
-    <div class="device">
-        <p class="tab_heading">Bill Tracker</p>
+  <div class="device">
+    <p class="tab_heading">Bill Tracker</p>
 
-        <form id="billForm">
-            <label for="billDate">Bill Due Date</label>
-            <input type="date" id="billDate" required>
+    <form id="billCreate">
+      <label for="billDate">Bill Due Date</label>
+      <input type="date" id="billDate" required>
 
-            <label for="billName">Bill Name</label>
-            <input type="text" id="billName" placeholder="e.g. Rent, Internet..." required>
+      <label for="billName">Bill Name</label>
+      <input type="text" id="billName" placeholder="e.g. Rent, Internet..." required>
 
-            <label for="billAmount">Amount ($)</label>
-            <input type="number" id="billAmount" placeholder="e.g. 1200" required>
+      <label for="billAmount">Amount ($)</label>
+      <input type="number" id="billAmount" placeholder="e.g. 1200" required>
 
-            <label>
-                <input type="checkbox" id="billRepeats">
-                Repeats Monthly
-            </label>
+      <label>
+        <input type="checkbox" id="billRepeats">
+        Repeats Monthly
+      </label>
 
-            <button type="submit">Add Bill</button>
-        </form>
+      <button type="submit">Add Bill</button>
+    </form>
 
-        <div class="bill_scroll_container" id="billContainer"></div>
+    <div class="flow" id="billView"></div>
 
-        <div class="tabcontainer">
-            <button onclick="window.location.href='budget.html'">
-                <img src="icons/budget.png" alt="Home" width="75px">
-            </button>
-            <button onclick="window.location.href='update_income.html'">
-                <img src="icons/income.png" alt="Home" width="75px">
-            </button>
-            <button onclick="window.location.href='index.html'">
-                <img src="icons/home.png" alt="Home" width="75px">
-            </button>
-            <button onclick="window.location.href='add_expense.html'">
-                <img src="icons/expense.png" alt="Home" width="75px">
-            </button>
-            <button onclick="window.location.href='bill_tracker.html'">
-                <img src="icons/bills.png" alt="Home" width="125px">
-            </button>
-        </div>
+    <div class="tabcontainer">
+      <button onclick="window.location.href='budget.html'">
+        <img src="icons/budget.png" alt="Home" width="75px">
+      </button>
+      <button onclick="window.location.href='update_income.html'">
+        <img src="icons/income.png" alt="Home" width="75px">
+      </button>
+      <button onclick="window.location.href='index.html'">
+        <img src="icons/home.png" alt="Home" width="75px">
+      </button>
+      <button onclick="window.location.href='add_expense.html'">
+        <img src="icons/expense.png" alt="Home" width="75px">
+      </button>
+      <button onclick="window.location.href='bill_tracker.html'">
+        <img src="icons/bills.png" alt="Home" width="125px">
+      </button>
     </div>
-    <script>
-        window.onload = () => {
-          const form = document.getElementById("billForm");
-          const container = document.getElementById("billContainer");
-          let bills = JSON.parse(localStorage.getItem("bills") || "[]");
-    
-          const addBill = (bill) => {
-            const block = document.createElement("div");
-            block.className = "bill_block";
-            block.innerHTML = `
-              <div class="bill_date">Due: ${new Date(bill.date).toLocaleDateString()}</div>
-              <div class="bill_info">${bill.name} — $${parseFloat(bill.amount).toFixed(2)}</div>
-              <div class="bill_info">Repeats Monthly: ${bill.repeats ? "✅" : "❌"}</div>
-            `;
-            container.appendChild(block);
-          };
-    
-          bills.forEach(addBill);
-    
-          form.onsubmit = (e) => {
-            e.preventDefault();
-            const bill = {
-              date: billDate.value,
-              name: billName.value,
-              amount: billAmount.value,
-              repeats: billRepeats.checked
-            };
-            bills.push(bill);
-            localStorage.setItem("bills", JSON.stringify(bills));
-            addBill(bill);
-            form.reset();
-          };
-        };
-      </script>
+  </div>
+
+  <script>
+    const billArea = document.getElementById("billView");
+    const form = document.getElementById("billCreate");
+    let bills = JSON.parse(localStorage.getItem("bills") || "[]");
+
+    function updateBills() {
+      billArea.innerHTML = "";
+      bills.forEach((bill, index) => addBillToLocal(bill, index));
+    }
+
+    function addBillToLocal(bill, index) {
+      const div = document.createElement("div");
+      div.className = "bill_info_box";
+      div.innerHTML = `
+        <div class="bill_date">Due: ${new Date(bill.date).toLocaleDateString()}</div>
+        <div class="bill_info">${bill.name} — $${parseFloat(bill.amount).toFixed(2)}</div>
+        <div class="bill_info">Repeats Monthly: ${bill.repeats ? "✅" : "❌"}</div>
+        <button class="remove-bill" onclick="removeBill(${index})">Remove</button>
+      `;
+      billArea.appendChild(div);
+    }
+
+    function removeBill(index) {
+      bills.splice(index, 1);
+      localStorage.setItem("bills", JSON.stringify(bills));
+      updateBills();
+    }
+
+    form.onsubmit = (e) => {
+      e.preventDefault();
+      const bill = {
+        date: billDate.value,
+        name: billName.value,
+        amount: billAmount.value,
+        repeats: billRepeats.checked
+      };
+      bills.push(bill);
+      localStorage.setItem("bills", JSON.stringify(bills));
+      updateBills();
+      form.reset();
+    };
+
+    updateBills(); 
+  </script>
 </body>
 </html>
