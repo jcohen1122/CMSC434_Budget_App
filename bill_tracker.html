@@ -1,118 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Add Expense - Budget Tracker</title>
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    /* Scrollable container for the bills */
-    .bill_scroll_container {
-      width: 100%;
-      height: 55%;
-      overflow-y: auto;
-      padding-bottom: 8rem; /* Prevents overlap with nav bar */
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Tracker - Budget Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+      * {
+    box-sizing: border-box;
+}
 
-    .bill_block {
-      background-color: white;
-      border: 3px solid #102542;
-      border-radius: 10px;
-      padding: 1.5rem;
-      margin: 1rem 0;
-      width: 90%;
-      box-shadow: 4px 4px 0px #102542;
-    }
+.bill_scroll_container {
+    overflow-x: hidden; 
+}
 
-    .bill_date {
-      font-size: 1.8rem;
-      font-weight: bold;
-      margin-bottom: 0.8rem;
-    }
+.bill_block {
+    width: 100%; 
+}
 
-    .bill_info {
-      font-size: 1.6rem;
-      margin: 0.4rem 0;
-    }
-  </style>
+        .bill_scroll_container {
+            width: 90%;
+            height: 40%;
+            overflow-y: auto;
+            padding-bottom: 8rem;
+            margin-top: 0.5rem;
+        }
+
+        .bill_block {
+            background-color: white;
+            border: 3px solid #102542;
+            border-radius: 10px;
+            padding: 1.2rem;
+            margin: 1rem 0;
+            width: 100%;
+            box-shadow: 4px 4px 0px #102542;
+        }
+
+        .bill_date {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .bill_info {
+            font-size: 1rem;
+            margin: 0.3rem 0;
+        }
+
+        form {
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            background-color: white;
+            padding: 0.8rem;
+            border-radius: 10px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            margin-top: 0.5rem;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"] {
+            font-size: 0.9rem;
+            padding: 0.4rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #102542;
+            color: white;
+            border: none;
+            padding: 0.6rem;
+            font-size: 0.95rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 0.4rem;
+        }
+
+        button:hover {
+            background-color: #1f3a60;
+        }
+    </style>
 </head>
+<script>
+    window.onload = function () {
+        const form = document.getElementById("billForm");
+        const container = document.getElementById("billContainer");
+
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const date = document.getElementById("billDate").value;
+            const name = document.getElementById("billName").value;
+            const amount = document.getElementById("billAmount").value;
+            const repeats = document.getElementById("billRepeats").checked;
+
+            const billBlock = document.createElement("div");
+            billBlock.className = "bill_block";
+
+            billBlock.innerHTML = `
+                <div class="bill_date">Due: ${new Date(date).toLocaleDateString()}</div>
+                <div class="bill_info">${name} — $${parseFloat(amount).toFixed(2)}</div>
+                <div class="bill_info">Repeats Monthly: ${repeats ? "✅" : "❌"}</div>
+            `;
+
+            container.appendChild(billBlock);
+            form.reset();
+        });
+    };
+</script>
 <body>
-  <div class="device">
-    <h1 class="tab_heading">Bill Tracker</h1>
+    <div class="device">
+        <p class="tab_heading">Bill Tracker</p>
 
-    <div class="bill_scroll_container">
-      <div class="bill_block">
-        <div class="bill_date">April 5, 2025</div>
-        <div class="bill_info">Rent — $1,200</div>
-        <div class="bill_info">Repeats Monthly: ✅</div>
-      </div>
-      <div class="bill_block">
-        <div class="bill_date">April 12, 2025</div>
-        <div class="bill_info">Phone Bill — $80</div>
-        <div class="bill_info">Repeats Monthly: ✅</div>
-      </div>
-      <div class="bill_block">
-        <div class="bill_date">April 20, 2025</div>
-        <div class="bill_info">Electric Bill — $100</div>
-        <div class="bill_info">Repeats Monthly: ✅</div>
-      </div>
-      <div class="bill_block">
-        <div class="bill_date">April 25, 2025</div>
-        <div class="bill_info">Game Subscription — $15</div>
-        <div class="bill_info">Repeats Monthly: ✅</div>
-      </div>
-      <div class="bill_block">
-        <div class="bill_date">May 1, 2025</div>
-        <div class="bill_info">Internet — $60</div>
-        <div class="bill_info">Repeats Monthly: ✅</div>
-      </div>
-      <div class="bill_block">
-        <div class="bill_date">May 10, 2025</div>
-        <div class="bill_info">Car Maintenance — $300</div>
-        <div class="bill_info">Repeats Monthly: ❌</div>
-      </div>
-      <div class="bill_block">
-        <div class="bill_date">May 18, 2025</div>
-        <div class="bill_info">Gym Membership — $45</div>
-        <div class="bill_info">Repeats Monthly: ✅</div>
-      </div>
-      <div class="bill_block">
-        <div class="bill_date">June 1, 2025</div>
-        <div class="bill_info">Rent — $1,200</div>
-        <div class="bill_info">Repeats Monthly: ✅</div>
-      </div>
-      <div class="bill_block">
-        <div class="bill_date">June 12, 2025</div>
-        <div class="bill_info">Phone Bill — $80</div>
-        <div class="bill_info">Repeats Monthly: ✅</div>
-      </div>
-      <div class="bill_block">
-        <div class="bill_date">June 23, 2025</div>
-        <div class="bill_info">Course Subscription — $100</div>
-        <div class="bill_info">Repeats Monthly: ❌</div>
-      </div>
+        <form id="billForm">
+            <label for="billDate">Bill Due Date</label>
+            <input type="date" id="billDate" required>
+
+            <label for="billName">Bill Name</label>
+            <input type="text" id="billName" placeholder="e.g. Rent, Internet..." required>
+
+            <label for="billAmount">Amount ($)</label>
+            <input type="number" id="billAmount" placeholder="e.g. 1200" required>
+
+            <label>
+                <input type="checkbox" id="billRepeats">
+                Repeats Monthly
+            </label>
+
+            <button type="submit">Add Bill</button>
+        </form>
+
+        <div class="bill_scroll_container" id="billContainer">
+            <div class="bill_block">
+                <div class="bill_date">April 5, 2025</div>
+                <div class="bill_info">Rent — $1,200</div>
+                <div class="bill_info">Repeats Monthly: ✅</div>
+            </div>
+            <div class="bill_block">
+                <div class="bill_date">April 12, 2025</div>
+                <div class="bill_info">Phone Bill — $80</div>
+                <div class="bill_info">Repeats Monthly: ✅</div>
+            </div>
+            <div class="bill_block">
+                <div class="bill_date">April 20, 2025</div>
+                <div class="bill_info">Electric Bill — $100</div>
+                <div class="bill_info">Repeats Monthly: ✅</div>
+            </div>
+            <div class="bill_block">
+                <div class="bill_date">April 25, 2025</div>
+                <div class="bill_info">Game Subscription — $15</div>
+                <div class="bill_info">Repeats Monthly: ✅</div>
+            </div>
+        </div>
+
+        <div class="tabcontainer">
+            <button onclick="window.location.href='budget.html'">
+                <img src="icons/budget.png" alt="Home" width="75px">
+            </button>
+            <button onclick="window.location.href='update_income.html'">
+                <img src="icons/income.png" alt="Home" width="75px">
+            </button>
+            <button onclick="window.location.href='index.html'">
+                <img src="icons/home.png" alt="Home" width="125px">
+            </button>
+            <button onclick="window.location.href='add_expense.html'">
+                <img src="icons/expense.png" alt="Home" width="75px">
+            </button>
+            <button onclick="window.location.href='bill_tracker.html'">
+                <img src="icons/bills.png" alt="Home" width="75px">
+            </button>
+        </div>
     </div>
-
-    <br>
-    <button>Add Bill</button>
-
-    <div class = "tabcontainer">
-      <button onclick="window.location.href='budget.html'">
-          <img src="icons/budget.png" alt="Home" width="75px">
-      </button>
-      <button onclick="window.location.href='update_income.html'">
-          <img src="icons/income.png" alt="Home" width="75px">
-      </button>
-      <button onclick="window.location.href='index.html'">
-          <img src="icons/home.png" alt="Home" width="75px">
-      </button>
-      <button onclick="window.location.href='add_expense.html'">
-          <img src="icons/expense.png" alt="Home" width="75px">
-      </button>
-      <button onclick="window.location.href='bill_tracker.html'">
-          <img src="icons/bills.png" alt="Home" width="125px">
-      </button>
-  </div>
-  </div>
 </body>
 </html>
