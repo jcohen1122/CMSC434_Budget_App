@@ -21,13 +21,20 @@
         // REMAINING BUDGET
         document.querySelector("#net").value = (income - totalExpenses).toFixed(2);
     };
+
+    function saveData() {
+      const input = document.querySelector("#income_box").value;
+      localStorage.setItem("user_income", input);
+      location.reload();
+    };
 </script>
 <body>
     <div class = "device">
         <p class = "tab_heading">Welcome, User!</p>
         <h1>Income&nbsp</h1>
         <!-- Will change value to pull from user's manually inputted income -->
-        <input type="text" value = "100000.00" id = "income_box" class = "balance_box" readonly>
+        <input type="text" value = "100000.00" id = "income_box" class = "balance_box">
+        <button onclick = "saveData()">Update</button>
         <!-- Will change value to pull from user's manually inputted income -->
         <h1>Expenses&nbsp</h1>
         <input type="text" value = "20000.00" id = "expenses" class = "balance_box" readonly>
@@ -37,14 +44,11 @@
             <button onclick="window.location.href='budget.html'">
                 <img src="icons/budget.png" alt="Home" width="75px">
             </button>
-            <button onclick="window.location.href='update_income.html'">
-                <img src="icons/income.png" alt="Home" width="75px">
+            <button onclick="window.location.href='add_expense.html'">
+                <img src="icons/expense.png" alt="Home" width="75px">
             </button>
             <button onclick="window.location.href='index.html'">
                 <img src="icons/home.png" alt="Home" width="125px">
-            </button>
-            <button onclick="window.location.href='add_expense.html'">
-                <img src="icons/expense.png" alt="Home" width="75px">
             </button>
             <button onclick="window.location.href='bill_tracker.html'">
                 <img src="icons/bills.png" alt="Home" width="75px">
