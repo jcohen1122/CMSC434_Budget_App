@@ -31,15 +31,17 @@
 <body>
     <div class = "device">
         <p class = "tab_heading">Welcome, User!</p>
-        <h1>Income&nbsp</h1>
-        <!-- Will change value to pull from user's manually inputted income -->
-        <input type="text" value = "100000.00" id = "income_box" class = "balance_box">
-        <button onclick = "saveData()">Update</button>
-        <!-- Will change value to pull from user's manually inputted income -->
-        <h1>Expenses&nbsp</h1>
-        <input type="text" value = "20000.00" id = "expenses" class = "balance_box" readonly>
-        <h1>Remaining Budget&nbsp</h1>
-        <input type="text" value = "80000.00" id = "net" class="balance_box" readonly>
+        <form>
+            <h1>Income</h1>
+            <!-- Will change value to pull from user's manually inputted income -->
+            <input type="text" value = "100000.00" id = "income_box" class = "input_box">
+            <button onclick = "saveData()">Update</button>
+            <!-- Will change value to pull from user's manually inputted income -->
+            <h1>Expenses</h1>
+            <input type="text" value = "20000.00" id = "expenses" class = "input_box" readonly>
+            <h1>Disposible Income</h1>
+            <input type="text" value = "80000.00" id = "net" class="input_box" readonly>
+        </form>
         <div class = "tabcontainer">
             <button onclick="window.location.href='budget.html'">
                 <img src="icons/budget.png" alt="Home" width="75px">

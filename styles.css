@@ -42,15 +42,6 @@ h2 {
     font-size: 1.8rem;
 }
 
-.balance_box,
-    select {
-      font-size: 2rem;
-      height: 4rem;
-      width: 20rem;
-      border: 3px solid black;
-      margin-bottom: 1rem;
-    }
-
 button {
     background-color: #102542;
     border-radius: 12px;
@@ -63,7 +54,6 @@ button {
 button:hover {
     background-color: white;
     color: #102542;
-    border: 5px solid black;
 }
 
 /* Navigation Bar */
@@ -105,12 +95,13 @@ form {
     width: 90%;
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
+    gap: 0.6em;
     background-color: white;
     padding: 0.8rem;
     border-radius: 10px;
     box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
     margin-top: 0.5rem;
+    border: 5px solid #102542;
 }
 
 label {
@@ -126,4 +117,12 @@ input[type="date"] {
   padding: 0.4rem;
   border: 1px solid #ccc;
   border-radius: 5px;
+}
+
+.input_box {
+    font-size: 2rem;
+    height: 2.5rem;
+    width: 20rem;
+    border: 3px solid black;
+    margin-bottom: 1rem;
 }
