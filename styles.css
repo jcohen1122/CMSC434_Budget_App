@@ -90,6 +90,12 @@ button:hover {
     width: 0;
 }
 
+.progress-bar-color2 {
+    height: 100%;
+    background-color:#102542; 
+    width: 0;
+}
+
 /* Default Form */
 form {
     width: 90%;

@@ -2,78 +2,183 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Add Expense - Budget Tracker</title>
   <link rel="stylesheet" href="styles.css">
+  <style>
+    .flow {
+      width: 90%;
+      height: 20%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-bottom: 8rem;
+      margin-top: 0.5rem;
+    }
+
+    .budget_info_box {
+      background-color: white;
+      border: 3px solid #102542;
+      border-radius: 10px;
+      padding: 1.2rem;
+      margin: 1rem 0;
+      width: 70%;
+      box-shadow: 4px 4px 0px #102542;
+      position: relative;
+    }
+
+    .budget_date {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .budget_info {
+      font-size: 1rem;
+      margin: 0.3rem 0;
+    }
+
+    .remove-budget {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.6rem;
+      font-size: 0.9rem;
+      padding: 0.3rem 0.5rem;
+      background-color: #102542;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .update-budget {
+      position: absolute;
+      top: 0.6rem;
+      right: 5.5rem;
+      font-size: 0.9rem;
+      padding: 0.3rem 0.5rem;
+      background-color: #102542;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
 </head>
-<style>
-  .bill_view {
-    width: 100%;
-    height: 55%;
-    overflow-y: auto;
-    padding-bottom: 8rem; 
-  }
-
-  .bill_block {
-    background-color: white;
-    border: 3px solid #102542;
-    border-radius: 10px;
-    padding: 1.5rem;
-    margin: 1rem 0;
-    width: 90%;
-    box-shadow: 4px 4px 0px #102542;
-  }
-
-  .bill_date {
-    font-size: 1.8rem;
-    font-weight: bold;
-    margin-bottom: 0.8rem;
-  }
-
-  .bill_info {
-    font-size: 1.6rem;
-    margin: 0.4rem 0;
-  }
-</style>
 <body>
   <div class="device">
-    <h1 class="tab_heading">Set Your Budget</h1>
-    <div class="bill_view">
-      <div class="bill_block">
-        <div class="Weekly Budget">Weekly Budget</div>
-        <div class="bill_info">Amount Spent — $1,200</div>
-        <div class="bill_info">Repeats Weekly: ✅</div>
-        <div class="progress-bar">
-          <div class="progress-bar-color" style="width: 60%;"></div>
-        </div>
-      </div>
-            <div class="bill_block">
-            <div class="Monthly Budget">Montly Budget</div>
-            <div class="bill_info">Amount Spent — $5,000</div>
-            <div class="bill_info">Repeats Monthly: ✅</div>
-            <div class="progress-bar">
-              <div class="progress-bar-color" style="width: 80%;"></div>
-            </div>
-          </div>
+    <p class="tab_heading">Set Your Budget</p>
 
-    <div class = "tabcontainer">
+    <form id="budgetCreate">
+      <label for="budgetName">Budget Name</label>
+      <input type="text" id="budgetName" placeholder="e.g. Dining Out, Leisure..." required>
+
+      <label for="budgetAmount">Amount ($)</label>
+      <input type="number" id="budgetAmount" placeholder="e.g. 1200" required>
+
+      <label for="budgetDate">Budget End Date</label>
+      <input type="date" id="budgetDate" required>
+
+      <button type="submit">Add Budget</button>
+    </form>
+
+    <div class="flow" id="budgetView"></div>
+
+    <div class="tabcontainer">
       <button onclick="window.location.href='budget.html'">
-          <img src="icons/budget.png" alt="Home" width="125px">
+        <img src="icons/budget.png" alt="Home" width="125px">
       </button>
       <button onclick="window.location.href='add_expense.html'">
         <img src="icons/expense.png" alt="Home" width="75px">
       </button>
       <button onclick="window.location.href='index.html'">
-          <img src="icons/home.png" alt="Home" width="75px">
+        <img src="icons/home.png" alt="Home" width="75px">
       </button>
       <button onclick="window.location.href='bill_tracker.html'">
-          <img src="icons/bills.png" alt="Home" width="75px">
+        <img src="icons/bills.png" alt="Home" width="75px">
       </button>
       <button onclick="window.location.href='goal.html'">
         <img src="icons/savingsgoal.png" alt="Home" width="75px">
       </button>
     </div>
-    <button>Add Budget Goal</button>    
   </div>
+
+  <script>
+    const budgetArea = document.getElementById("budgetView");
+    const form = document.getElementById("budgetCreate");
+    let budgets = JSON.parse(localStorage.getItem("budgets") || "[]");
+
+    function updateBudgets() {
+      budgetArea.innerHTML = "";
+      budgets.forEach((budget, index) => addBudgetToLocal(budget, index));
+    }
+
+    function addBudgetToLocal(budget, index) {
+      const div = document.createElement("div");
+      div.className = "budget_info_box";
+      const currentProgress = budget.currentProgress || 0;
+      const percentUsed = Math.min((currentProgress / budget.amount) * 100, 100).toFixed(1);
+
+      div.innerHTML = `
+        <div class="budget_date">End Date: ${new Date(budget.date).toLocaleDateString()}</div>
+        <div class="budget_info">${budget.name} — $${parseFloat(budget.amount).toFixed(2)}</div>
+        <button class="remove-budget" onclick="removeBudget(${index})">Remove</button>
+        <button class="update-budget" onclick="updateBudget(${index})">Update</button>
+        <div class="budget_info"><strong>Current Progress: </strong></div>
+        <input class="current_progress" type="number" id="progress-${index}" value="${currentProgress}">
+        <label id="progress-label-${index}" for="progress-bar" style="display:flex;justify-self:center;">${percentUsed}%</label>
+        <div class="progress-bar">
+          <div id="progress-bar-fill-${index}" class="progress-bar-color2" style="width: ${percentUsed}%;"></div>
+        </div>
+      `;
+      budgetArea.appendChild(div);
+    }
+
+    function removeBudget(index) {
+      budgets.splice(index, 1);
+      localStorage.setItem("budgets", JSON.stringify(budgets));
+      updateBudgets();
+    }
+
+    function updateBudget(index) {
+      const progressInput = document.getElementById(`progress-${index}`);
+      const label = document.getElementById(`progress-label-${index}`);
+      const bar = document.getElementById(`progress-bar-fill-${index}`);
+
+      const currentProgress = parseFloat(progressInput.value);
+      const budgetAmount = parseFloat(budgets[index].amount);
+
+      if (isNaN(currentProgress) || currentProgress < 0) {
+        alert("Please enter a valid progress amount.");
+        return;
+      }
+
+      const percent = Math.min((currentProgress / budgetAmount) * 100, 100);
+        // Update UI
+      label.textContent = `${percent.toFixed(1)}%`;
+      bar.style.width = `${percent}%`;
+
+      // Update object in memory
+      budgets[index].currentProgress = currentProgress;
+      budgets[index].percentUsed = percent;
+
+      // Save back to localStorage
+      localStorage.setItem("budgets", JSON.stringify(budgets));
+    }
+
+    form.onsubmit = (e) => {
+      e.preventDefault();
+      const budget = {
+        date: budgetDate.value,
+        name: budgetName.value,
+        amount: budgetAmount.value,
+      };
+      budgets.push(budget);
+      localStorage.setItem("budgets", JSON.stringify(budgets));
+      updateBudgets();
+      form.reset();
+    };
+
+    updateBudgets(); 
+  </script>
 </body>
 </html>
