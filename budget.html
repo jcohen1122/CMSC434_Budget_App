@@ -123,7 +123,7 @@
         <div class="budget_info">${budget.name} — $${parseFloat(budget.amount).toFixed(2)}</div>
         <button class="remove-budget" onclick="removeBudget(${index})">Remove</button>
         <button class="update-budget" onclick="updateBudget(${index})">Update</button>
-        <div class="budget_info"><strong>Current Progress: </strong></div>
+        <div class="budget_info"><strong>Current $ Progress: </strong></div>
         <input class="current_progress" type="number" id="progress-${index}" value="${currentProgress}">
         <label id="progress-label-${index}" for="progress-bar" style="display:flex;justify-self:center;">${percentUsed}%</label>
         <div class="progress-bar">
