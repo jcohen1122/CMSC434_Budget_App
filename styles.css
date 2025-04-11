@@ -59,7 +59,7 @@ button:hover {
 /* Navigation Bar */
 .tabcontainer {
     position: fixed;
-    bottom: 0;
+    bottom: 84%;
     left: 0;
     width: 100%;
     display: flex;
@@ -125,10 +125,51 @@ input[type="date"] {
   border-radius: 5px;
 }
 
+.category_input {
+    font-size: 1.5rem;
+}
+
 .input_box {
     font-size: 2rem;
-    height: 2.5rem;
+    height: 2rem;
     width: 20rem;
     border: 3px solid black;
     margin-bottom: 1rem;
 }
+
+/* Keyboard */
+.keyboard {
+    background: #d6d6d6;
+    padding: 10px;
+    border-radius: 20px;
+    display: grid;
+    gap: 10px;
+    width: 98%
+  }
+
+  .row {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+  }
+
+  .key {
+    background: white;
+    color: #333;
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 18px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    min-width: 20px;
+    text-align: center;
+    user-select: none;
+  }
+
+  .key.wide {
+    min-width: 80px;
+  }
+
+  .key.space {
+    flex: 1;
+    min-width: 200px;
+  }

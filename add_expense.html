@@ -10,14 +10,13 @@
 
 <body>
   <div class="device">
-    <h1 class="tab_heading">Add a New Expense</h1>
-
+    <br><br><br><br><br><br><br>
     <form>
     <label for="amount">Expense Amount ($):</label>
       <input type="number" id="amount" name="amount" placeholder="e.g., 45.00" class="input_box" />
 
       <label for="category">Category:</label>
-      <select id="category" name="category" class = "input_box">
+      <select id="category" name="category" class = "category_input">
         <option value="">-- Select Category --</option>
         <option value="Food">Food</option>
         <option value="Housing">Housing</option>
@@ -35,6 +34,7 @@
     </form>
     <br>
     <button onclick="window.location.href='view_expenses.html'">View Expenses</button>
+    <br><br><br><br><br>
 
     <div class="tabcontainer">
       <button onclick="window.location.href='budget.html'">
@@ -53,6 +53,50 @@
         <img src="icons/savingsgoal.png" alt="Home" width="75px">
       </button>
     </div>
+
+    <br>
+        <div class="keyboard">
+            <div class="row">
+              <div class="key">Q</div>
+              <div class="key">W</div>
+              <div class="key">E</div>
+              <div class="key">R</div>
+              <div class="key">T</div>
+              <div class="key">Y</div>
+              <div class="key">U</div>
+              <div class="key">I</div>
+              <div class="key">O</div>
+              <div class="key">P</div>
+            </div>
+            <div class="row">
+              <div class="key">A</div>
+              <div class="key">S</div>
+              <div class="key">D</div>
+              <div class="key">F</div>
+              <div class="key">G</div>
+              <div class="key">H</div>
+              <div class="key">J</div>
+              <div class="key">K</div>
+              <div class="key">L</div>
+            </div>
+            <div class="row">
+              <div class="key wide">Shift</div>
+              <div class="key">Z</div>
+              <div class="key">X</div>
+              <div class="key">C</div>
+              <div class="key">V</div>
+              <div class="key">B</div>
+              <div class="key">N</div>
+              <div class="key">M</div>
+              <div class="key wide">Delete</div>
+            </div>
+            <div class="row">
+              <div class="key wide">123</div>
+              <div class="key wide">Emoji</div>
+              <div class="key space">Space</div>
+              <div class="key wide">Return</div>
+            </div>
+        </div>
   </div>
 
   <script>
