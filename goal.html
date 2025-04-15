@@ -7,9 +7,9 @@
   <link rel="stylesheet" href="styles.css">
   <style>
     label {
-      font-size: 2rem;
-      margin-top: 1rem;
-      margin-bottom: 0.3rem;
+      font-size: 1.5rem;
+      margin-top: .01rem;
+      margin-bottom: 0.1rem;
       display: block;
     }
 
@@ -46,11 +46,60 @@
     }
 
     #goalsContainer {
-      height: 300px;
+      width: 90%;
+      height: 4%;
       overflow-y: auto;
-      margin-top: 1rem;
-      padding: 0 1rem;
-      scroll-behavior: smooth;
+      overflow-x: hidden;
+      padding-bottom: 8rem;
+      margin-top: 0.5rem;
+    }
+
+    .goal_info_box {
+      background-color: white;
+      border: 3px solid #102542;
+      border-radius: 10px;
+      padding: 1.2rem;
+      margin: 1rem 0;
+      width: 70%;
+      box-shadow: 4px 4px 0px #102542;
+      position: relative;
+    }
+
+    .goal_date {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .goal_info {
+      font-size: 1rem;
+      margin: 0.3rem 0;
+    }
+
+    .remove-goal {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.6rem;
+      font-size: 0.9rem;
+      padding: 0.3rem 0.5rem;
+      background-color: #102542;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .update-goal {
+      position: absolute;
+      top: 0.6rem;
+      right: 5.5rem;
+      font-size: 0.9rem;
+      padding: 0.3rem 0.5rem;
+      background-color: #102542;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -58,7 +107,7 @@
   <div class="device">
     <br><br><br><br><br><br><br>
     <form id="goalForm">
-      <label for="goalName">Goal Name:</label>
+      <label for="goalName">Savings Goal Name:</label>
       <input type="text" id="goalName" name="goalName" placeholder="e.g., Europe Trip" class="input_box" required />
 
       <label for="targetAmount">Target Amount ($):</label>
@@ -71,8 +120,6 @@
     </form>
 
     <div id="goalsContainer"></div>
-
-    <br><br><br><br><br>
 
     <div class="tabcontainer">
       <button onclick="window.location.href='budget.html'">
@@ -137,33 +184,79 @@
   </div>
 
   <script>
-    document.getElementById("goalForm").addEventListener("submit", function (e) {
-      e.preventDefault();
+     const goalArea = document.getElementById("goalsContainer");
+      const form = document.getElementById("goalForm");
+      let goals = JSON.parse(localStorage.getItem("goals") || "[]");
 
-      const goalName = document.getElementById("goalName").value;
-      const targetAmount = parseFloat(document.getElementById("targetAmount").value);
-      const targetDate = document.getElementById("targetDate").value;
+      function updateGoals() {
+        goalArea.innerHTML = "";
+        goals.forEach((goal, index) => addGoalToLocal(goal, index));
+      }
 
-      const savedAmount = 500;
-      const progressPercent = Math.min((savedAmount / targetAmount) * 100, 100).toFixed(0);
+      function addGoalToLocal(goal, index) {
+        const div = document.createElement("div");
+        div.className = "goal_info_box";
+        const currentProgress = goal.currentProgress || 0;
+        const percentUsed = Math.min((currentProgress / goal.amount) * 100, 100).toFixed(1);
 
-      const goalBox = document.createElement("div");
-      goalBox.className = "progress-box";
-      goalBox.innerHTML = `
-        <h3>${goalName}</h3>
-        <p>Target: $${targetAmount} by ${targetDate}</p>
-        <p>Saved: $${savedAmount}</p>
-        <div class="progress-bar">
-          <div class="progress-fill" style="width: ${progressPercent}%;">${progressPercent}%</div>
-        </div>
-      `;
+        div.innerHTML = `
+          <div class="goal_date">End Date: ${new Date(goal.date).toLocaleDateString()}</div>
+          <div class="goal_info">${goal.name} — $${parseFloat(goal.amount).toFixed(2)}</div>
+          <button class="remove-goal" onclick="removeGoal(${index})">Remove</button>
+          <button class="update-goal" onclick="updateGoal(${index})">Update</button>
+          <div class="goal_info"><strong>Current $ Progress: </strong></div>
+          <input class="current_progress" type="number" id="progress-${index}" value="${currentProgress}">
+          <label id="progress-label-${index}" for="progress-bar" style="display:flex;justify-self:center;">${percentUsed}%</label>
+          <div class="progress-bar">
+            <div id="progress-bar-fill-${index}" class="progress-bar-color2" style="width: ${percentUsed}%;"></div>
+          </div>
+        `;
+        goalArea.appendChild(div);
+      }
 
-      const container = document.getElementById("goalsContainer");
-      container.appendChild(goalBox);
-      container.scrollTop = container.scrollHeight;
+      function removeGoal(index) {
+        goals.splice(index, 1);
+        localStorage.setItem("goals", JSON.stringify(goals));
+        updateGoals();
+      }
 
-      document.getElementById("goalForm").reset();
-    });
+      function updateGoal(index) {
+        const progressInput = document.getElementById(`progress-${index}`);
+        const label = document.getElementById(`progress-label-${index}`);
+        const bar = document.getElementById(`progress-bar-fill-${index}`);
+
+        const currentProgress = parseFloat(progressInput.value);
+        const goalAmount = parseFloat(goals[index].amount);
+
+        if (isNaN(currentProgress) || currentProgress < 0) {
+          alert("Please enter a valid progress amount.");
+          return;
+        }
+
+        const percent = Math.min((currentProgress / goalAmount) * 100, 100);
+        label.textContent = `${percent.toFixed(1)}%`;
+        bar.style.width = `${percent}%`;
+
+        goals[index].currentProgress = currentProgress;
+        goals[index].percentUsed = percent;
+
+        localStorage.setItem("goals", JSON.stringify(goals));
+      }
+
+      form.onsubmit = (e) => {
+        e.preventDefault();
+        const goal = {
+          date: targetDate.value,
+          name: goalName.value,
+          amount: targetAmount.value,
+        };
+        goals.push(goal);
+        localStorage.setItem("goals", JSON.stringify(goals));
+        updateGoals();
+        form.reset();
+      };
+
+      updateGoals(); 
   </script>
 </body>
 </html>
