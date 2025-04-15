@@ -44,11 +44,18 @@
       font-weight: bold;
       transition: width 0.5s ease;
     }
+
+    #goalsContainer {
+      height: 300px;
+      overflow-y: auto;
+      margin-top: 1rem;
+      padding: 0 1rem;
+      scroll-behavior: smooth;
+    }
   </style>
 </head>
 <body>
   <div class="device">
-    <!-- Form for creating savings goal -->
     <br><br><br><br><br><br><br>
     <form id="goalForm">
       <label for="goalName">Goal Name:</label>
@@ -63,12 +70,10 @@
       <button type="submit">Save Goal</button>
     </form>
 
-    <!-- Where new goals will appear -->
     <div id="goalsContainer"></div>
 
     <br><br><br><br><br>
 
-    
     <div class="tabcontainer">
       <button onclick="window.location.href='budget.html'">
           <img src="icons/budget.png" alt="Budget" width="75px">
@@ -87,7 +92,6 @@
       </button>
     </div>
 
-    <!-- Virtual Keyboard -->
     <div class="keyboard">
       <div class="row">
         <div class="key">Q</div>
@@ -140,7 +144,7 @@
       const targetAmount = parseFloat(document.getElementById("targetAmount").value);
       const targetDate = document.getElementById("targetDate").value;
 
-      const savedAmount = 500; // hardcoded savings
+      const savedAmount = 500;
       const progressPercent = Math.min((savedAmount / targetAmount) * 100, 100).toFixed(0);
 
       const goalBox = document.createElement("div");
@@ -154,9 +158,10 @@
         </div>
       `;
 
-      document.getElementById("goalsContainer").appendChild(goalBox);
+      const container = document.getElementById("goalsContainer");
+      container.appendChild(goalBox);
+      container.scrollTop = container.scrollHeight;
 
-      // Clear form
       document.getElementById("goalForm").reset();
     });
   </script>
