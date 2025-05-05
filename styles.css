@@ -64,7 +64,7 @@ button:hover {
     width: 100%;
     display: flex;
     justify-content: center;
-    gap: 1rem;
+    gap: 0rem;
     padding: 1rem 0;
   }
 
