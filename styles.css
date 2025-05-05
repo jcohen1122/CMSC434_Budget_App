@@ -74,6 +74,29 @@ button:hover {
     padding: 0.3rem 0.5rem;
 }
 
+.image-button {
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.image-button img {
+transition: opacity 0.3s ease;
+}
+
+.image-button img.hover {
+display: none;
+}
+
+.image-button:hover img.default {
+display: none;
+}
+
+.image-button:hover img.hover {
+display: inline;
+}
+
 /* Budget Tab */
 .progress-bar {
     width: 90%;
