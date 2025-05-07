@@ -52,6 +52,7 @@
       overflow-x: hidden;
       padding-bottom: 8rem;
       margin-top: 0.5rem;
+      display: none;
     }
 
     .goal_info_box {
@@ -76,10 +77,9 @@
       margin: 0.3rem 0;
     }
 
-    .remove-goal {
+    .remove-goal, .update-goal {
       position: absolute;
       top: 0.6rem;
-      right: 0.6rem;
       font-size: 0.9rem;
       padding: 0.3rem 0.5rem;
       background-color: #102542;
@@ -89,38 +89,58 @@
       cursor: pointer;
     }
 
+    .remove-goal {
+      right: 0.6rem;
+    }
+
     .update-goal {
-      position: absolute;
-      top: 0.6rem;
       right: 5.5rem;
-      font-size: 0.9rem;
-      padding: 0.3rem 0.5rem;
-      background-color: #102542;
+    }
+
+    #snackbar {
+      visibility: hidden;
+      min-width: 200px;
+      background-color: #4CAF50;
       color: white;
-      border: none;
+      text-align: center;
       border-radius: 5px;
-      cursor: pointer;
+      padding: 12px;
+      position: fixed;
+      z-index: 1;
+      left: 50%;
+      bottom: 30px;
+      transform: translateX(-50%);
+      font-size: 17px;
     }
   </style>
 </head>
 <body>
   <div class="device">
     <br><br><br><br><br><br><br>
+
+    <!-- Snackbar -->
+    <div id="snackbar">Goal saved</div>
+
+    <!-- Updated Form -->
     <form id="goalForm">
       <label for="goalName">Savings Goal Name:</label>
       <input type="text" id="goalName" name="goalName" placeholder="e.g., Europe Trip" class="input_box" required />
+      <div id="goalNameError" style="color:red; font-size:0.9rem;"></div>
 
-      <label for="targetAmount">Target Amount ($):</label>
+      <label for="targetAmount">Goal Amount ($):</label>
       <input type="number" id="targetAmount" name="targetAmount" placeholder="e.g., 1500" class="input_box" required />
+      <div id="amountError" style="color:red; font-size:0.9rem;"></div>
 
-      <label for="targetDate">Target Date:</label>
+      <label for="targetDate">Goal Date:</label>
       <input type="date" id="targetDate" name="targetDate" class="input_box" required />
+      <div id="dateError" style="color:red; font-size:0.9rem;"></div>
 
-      <button type="submit">Save Goal</button>
+      <button id="submitBtn" type="submit" disabled>Save Goal</button>
     </form>
 
     <div id="goalsContainer"></div>
 
+    <!-- Navigation -->
     <div class="tabcontainer">
       <button class="image-button" onclick="window.location.href='budget.html'">
         <img src="icons/budget.png" alt="Budget" class="default" width="115px">
@@ -143,92 +163,131 @@
       </button>
     </div>
 
+    <!-- Keyboard UI -->
     <div class="keyboard">
       <div class="row">
-        <div class="key">Q</div>
-        <div class="key">W</div>
-        <div class="key">E</div>
-        <div class="key">R</div>
-        <div class="key">T</div>
-        <div class="key">Y</div>
-        <div class="key">U</div>
-        <div class="key">I</div>
-        <div class="key">O</div>
-        <div class="key">P</div>
+        <div class="key">Q</div><div class="key">W</div><div class="key">E</div><div class="key">R</div>
+        <div class="key">T</div><div class="key">Y</div><div class="key">U</div><div class="key">I</div>
+        <div class="key">O</div><div class="key">P</div>
       </div>
       <div class="row">
-        <div class="key">A</div>
-        <div class="key">S</div>
-        <div class="key">D</div>
-        <div class="key">F</div>
-        <div class="key">G</div>
-        <div class="key">H</div>
-        <div class="key">J</div>
-        <div class="key">K</div>
+        <div class="key">A</div><div class="key">S</div><div class="key">D</div><div class="key">F</div>
+        <div class="key">G</div><div class="key">H</div><div class="key">J</div><div class="key">K</div>
         <div class="key">L</div>
       </div>
       <div class="row">
-        <div class="key wide">Shift</div>
-        <div class="key">Z</div>
-        <div class="key">X</div>
-        <div class="key">C</div>
-        <div class="key">V</div>
-        <div class="key">B</div>
-        <div class="key">N</div>
-        <div class="key">M</div>
+        <div class="key wide">Shift</div><div class="key">Z</div><div class="key">X</div><div class="key">C</div>
+        <div class="key">V</div><div class="key">B</div><div class="key">N</div><div class="key">M</div>
         <div class="key wide">Delete</div>
       </div>
       <div class="row">
-        <div class="key wide">123</div>
-        <div class="key wide">Emoji</div>
+        <div class="key wide">123</div><div class="key wide">Emoji</div>
         <div class="key space">Space</div>
         <div class="key wide">Return</div>
       </div>
     </div>
   </div>
 
+  <!-- Script -->
   <script>
-     const goalArea = document.getElementById("goalsContainer");
-      const form = document.getElementById("goalForm");
-      let goals = JSON.parse(localStorage.getItem("goals") || "[]");
+    const form = document.getElementById("goalForm");
+    const goalArea = document.getElementById("goalsContainer");
+    const snackbar = document.getElementById("snackbar");
+    const submitBtn = document.getElementById("submitBtn");
 
-      function updateGoals() {
-        goalArea.innerHTML = "";
-        goals.forEach((goal, index) => addGoalToLocal(goal, index));
+    const nameInput = document.getElementById("goalName");
+    const amountInput = document.getElementById("targetAmount");
+    const dateInput = document.getElementById("targetDate");
+
+    const nameError = document.getElementById("goalNameError");
+    const amountError = document.getElementById("amountError");
+    const dateError = document.getElementById("dateError");
+
+    let goals = JSON.parse(localStorage.getItem("goals") || "[]");
+
+    function validateForm() {
+      let valid = true;
+
+      if (!nameInput.value.trim()) {
+        nameError.textContent = "Goal name is required.";
+        valid = false;
+      } else {
+        nameError.textContent = "";
       }
 
-      function addGoalToLocal(goal, index) {
-        const div = document.createElement("div");
-        div.className = "goal_info_box";
-        const currentProgress = goal.currentProgress || 0;
-        const percentUsed = Math.min((currentProgress / goal.amount) * 100, 100).toFixed(1);
-
-        div.innerHTML = `
-          <div class="goal_date">End Date: ${new Date(goal.date).toLocaleDateString()}</div>
-          <div class="goal_info">${goal.name} — $${parseFloat(goal.amount).toFixed(2)}</div>
-          <button class="remove-goal" onclick="removeGoal(${index})">Remove</button>
-          <button class="update-goal" onclick="updateGoal(${index})">Update</button>
-          <div class="goal_info"><strong>Current $ Progress: </strong></div>
-          <input class="current_progress" type="number" id="progress-${index}" value="${currentProgress}">
-          <label id="progress-label-${index}" for="progress-bar" style="display:flex;justify-self:center;">${percentUsed}%</label>
-          <div class="progress-bar">
-            <div id="progress-bar-fill-${index}" class="progress-bar-color2" style="width: ${percentUsed}%;"></div>
-          </div>
-        `;
-        goalArea.appendChild(div);
+      if (!amountInput.value || amountInput.value <= 0) {
+        amountError.textContent = "Please enter a valid amount.";
+        valid = false;
+      } else {
+        amountError.textContent = "";
       }
 
-      function removeGoal(index) {
+      if (!dateInput.value) {
+        dateError.textContent = "Goal date is required.";
+        valid = false;
+      } else {
+        dateError.textContent = "";
+      }
+
+      submitBtn.disabled = !valid;
+    }
+
+    nameInput.addEventListener("input", validateForm);
+    amountInput.addEventListener("input", validateForm);
+    dateInput.addEventListener("input", validateForm);
+
+    function showSnackbar() {
+      snackbar.style.visibility = "visible";
+      setTimeout(() => {
+        snackbar.style.visibility = "hidden";
+      }, 3000);
+    }
+
+    function updateGoals() {
+      goalArea.innerHTML = "";
+      if (goals.length === 0) {
+        goalArea.style.display = "none";
+        return;
+      }
+
+      goalArea.style.display = "block";
+      goals.forEach((goal, index) => addGoalToLocal(goal, index));
+    }
+
+    function addGoalToLocal(goal, index) {
+      const div = document.createElement("div");
+      div.className = "goal_info_box";
+      const currentProgress = goal.currentProgress || 0;
+      const percentUsed = Math.min((currentProgress / goal.amount) * 100, 100).toFixed(1);
+
+      div.innerHTML = `
+        <div class="goal_date">End Date: ${new Date(goal.date).toLocaleDateString()}</div>
+        <div class="goal_info">${goal.name} — $${parseFloat(goal.amount).toFixed(2)}</div>
+        <button class="remove-goal" onclick="confirmRemoveGoal(${index})">Remove</button>
+        <button class="update-goal" onclick="confirmUpdateGoal(${index})">Update</button>
+        <div class="goal_info"><strong>Current $ Progress: </strong></div>
+        <input class="current_progress" type="number" id="progress-${index}" value="${currentProgress}">
+        <label id="progress-label-${index}" for="progress-bar" style="display:flex;justify-self:center;">${percentUsed}%</label>
+        <div class="progress-bar">
+          <div id="progress-bar-fill-${index}" class="progress-fill" style="width: ${percentUsed}%;"></div>
+        </div>
+      `;
+      goalArea.appendChild(div);
+    }
+
+    function confirmRemoveGoal(index) {
+      if (confirm("Are you sure you want to remove this goal?")) {
         goals.splice(index, 1);
         localStorage.setItem("goals", JSON.stringify(goals));
         updateGoals();
       }
+    }
 
-      function updateGoal(index) {
+    function confirmUpdateGoal(index) {
+      if (confirm("Update current progress for this goal?")) {
         const progressInput = document.getElementById(`progress-${index}`);
         const label = document.getElementById(`progress-label-${index}`);
         const bar = document.getElementById(`progress-bar-fill-${index}`);
-
         const currentProgress = parseFloat(progressInput.value);
         const goalAmount = parseFloat(goals[index].amount);
 
@@ -243,24 +302,27 @@
 
         goals[index].currentProgress = currentProgress;
         goals[index].percentUsed = percent;
-
         localStorage.setItem("goals", JSON.stringify(goals));
       }
+    }
 
-      form.onsubmit = (e) => {
-        e.preventDefault();
-        const goal = {
-          date: targetDate.value,
-          name: goalName.value,
-          amount: targetAmount.value,
-        };
-        goals.push(goal);
-        localStorage.setItem("goals", JSON.stringify(goals));
-        updateGoals();
-        form.reset();
+    form.onsubmit = (e) => {
+      e.preventDefault();
+      const goal = {
+        date: targetDate.value,
+        name: goalName.value.trim(),
+        amount: parseFloat(targetAmount.value),
       };
+      goals.push(goal);
+      localStorage.setItem("goals", JSON.stringify(goals));
+      updateGoals();
+      form.reset();
+      submitBtn.disabled = true;
+      showSnackbar();
+    };
 
-      updateGoals(); 
+    updateGoals();
+    validateForm();
   </script>
 </body>
 </html>
