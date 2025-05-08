@@ -12,47 +12,52 @@
 <body>
     <div class="device">
         <br><br><br><br><br><br>
-
+        
         <h2>Expenses by Category</h2>
         <canvas id="expenseChart" width="300" height="300" style="margin-bottom: 10px;"></canvas>
-
+        
         <form>
-        <h2>Expense History</h2>
-        <div id="expenseList" style="max-height: 300px; overflow-y: auto; font-size:1.5rem;"></div>
+            <h2>Expense History</h2>
+            <label for="categoryFilter" style="font-size: 1.2rem;">Filter by Category:</label>
+            <select id="categoryFilter" onchange="showExpenses()" style="margin-bottom: 10px; font-size: 1.2rem;">
+                <option value="">All</option>
+            </select>
+            <div id="expenseList" style="font-size:1.5rem;"></div>
+            
         </form>
-
+        
         <div class="tabcontainer">
             <button class="image-button" onclick="window.location.href='budget.html'">
-              <img src="icons/budget.png" alt="Budget" class="default" width="115px">
-              <img src="icons/budget2.png" alt="Budget Hover" class="hover" width="115px">
+                <img src="icons/budget.png" alt="Budget" class="default" width="115px">
+                <img src="icons/budget2.png" alt="Budget Hover" class="hover" width="115px">
             </button>
             <button onclick="window.location.href='add_expense.html'">
-              <img src="icons/expense2.png" alt="Home" width="115px">
+                <img src="icons/expense2.png" alt="Home" width="115px">
             </button>
             <button class="image-button" onclick="window.location.href='index.html'">
-              <img src="icons/home.png" alt="Budget" class="default" width="115px">
-              <img src="icons/home2.png" alt="Budget Hover" class="hover" width="115px">
+                <img src="icons/home.png" alt="Budget" class="default" width="115px">
+                <img src="icons/home2.png" alt="Budget Hover" class="hover" width="115px">
             </button>
             <button class="image-button" onclick="window.location.href='bill_tracker.html'">
-              <img src="icons/bills.png" alt="Budget" class="default" width="115px">
-              <img src="icons/bills2.png" alt="Budget Hover" class="hover" width="115px">
+                <img src="icons/bills.png" alt="Budget" class="default" width="115px">
+                <img src="icons/bills2.png" alt="Budget Hover" class="hover" width="115px">
             </button>
             <button class="image-button" onclick="window.location.href='goal.html'">
-              <img src="icons/savingsgoal.png" alt="Budget" class="default" width="115px">
-              <img src="icons/savingsgoal2.png" alt="Budget Hover" class="hover" width="115px">
+                <img src="icons/savingsgoal.png" alt="Budget" class="default" width="115px">
+                <img src="icons/savingsgoal2.png" alt="Budget Hover" class="hover" width="115px">
             </button>
-          </div>
+        </div>
     </div>
-
+    
     <script>
         function getExpenses() {
             return JSON.parse(localStorage.getItem("expense_history")) || [];
         }
-
+        
         function drawChart() {
             const expenses = getExpenses();
             const summary = {};
-
+            
             // BREAK DOWN INTO INDIVIDUAL CATEGORIES
             expenses.forEach(exp => {
                 if (summary[exp.category]) {
@@ -61,15 +66,15 @@
                     summary[exp.category] = exp.amount;
                 }
             });
-
+            
             const labels = Object.keys(summary);
             const data = Object.values(summary);
-
+            
             if (labels.length === 0) {
                 document.getElementById("expenseChart").replaceWith("No expenses to display yet");
                 return;
             }
-
+            
             new Chart(document.getElementById("expenseChart"), {
                 type: "pie",
                 data: {
@@ -91,28 +96,60 @@
                 }
             });
         }
-
-        // DISPLAY EXPENSES BELOW CHART
+        
         function showExpenses() {
             const list = document.getElementById("expenseList");
             const expenses = getExpenses();
-
-            if (expenses.length === 0) {
-                list.innerHTML = "<p>No expenses yet.</p>";
+            const selectedCategory = document.getElementById("categoryFilter").value;
+            
+            // Filter expenses by selected category (if one is selected)
+            const filtered = selectedCategory
+            ? expenses.filter(e => e.category === selectedCategory)
+            : expenses;
+            
+            // Sort by most recent date
+            filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            // Get only the most recent 3
+            const latest = filtered.slice(0, 3);
+            
+            if (latest.length === 0) {
+                list.innerHTML = "<p>No expenses to display.</p>";
                 return;
             }
-
-            // MAP EXPENSES TO CORRECT FORMATTING
-            list.innerHTML = expenses.map(e => `
-            <div style="border-bottom: 1px solid #ccc; padding: 8px;">
+            
+            list.innerHTML = latest.map(e => `
+        <div style="border-bottom: 1px solid #ccc; padding: 8px;">
             <strong>$${e.amount.toFixed(2)}</strong> - ${e.category}<br>
             <small>${e.description || "No description"}<br>${new Date(e.date).toLocaleString()}</small>
-            </div>
-        `).join('');
+        </div>
+    `).join('');
         }
-
+        
+        function populateCategoryFilter() {
+            const expenses = getExpenses();
+            const uniqueCategories = [...new Set(expenses.map(e => e.category))];
+            
+            const filter = document.getElementById("categoryFilter");
+            filter.innerHTML = '<option value="">All</option>';
+            uniqueCategories.forEach(cat => {
+                const option = document.createElement("option");
+                option.value = cat;
+                option.textContent = cat;
+                filter.appendChild(option);
+            });
+        }
+        
         window.onload = function () {
             drawChart();
+            populateCategoryFilter();
+            showExpenses();
+        };
+        
+        
+        window.onload = function () {
+            drawChart();
+            populateCategoryFilter();
             showExpenses();
         };
     </script>
