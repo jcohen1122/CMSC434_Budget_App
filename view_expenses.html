@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>View Expenses - Budget Tracker</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
@@ -14,7 +14,11 @@
         <br><br><br><br><br><br>
         
         <h2>Expenses by Category</h2>
-        <canvas id="expenseChart" width="300" height="300" style="margin-bottom: 10px;"></canvas>
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <canvas id="expenseChart" width="250" height="250"></canvas>
+            <div id="chartLegend" style="font-size: 1.2rem;"></div>
+        </div>
+        
         
         <form>
             <h2>Expense History</h2>
@@ -23,7 +27,6 @@
                 <option value="">All</option>
             </select>
             <div id="expenseList" style="font-size:1.5rem;"></div>
-            
         </form>
         
         <div class="tabcontainer">
@@ -35,16 +38,16 @@
                 <img src="icons/expense2.png" alt="Home" width="115px">
             </button>
             <button class="image-button" onclick="window.location.href='index.html'">
-                <img src="icons/home.png" alt="Budget" class="default" width="115px">
-                <img src="icons/home2.png" alt="Budget Hover" class="hover" width="115px">
+                <img src="icons/home.png" alt="Home" class="default" width="115px">
+                <img src="icons/home2.png" alt="Home Hover" class="hover" width="115px">
             </button>
             <button class="image-button" onclick="window.location.href='bill_tracker.html'">
-                <img src="icons/bills.png" alt="Budget" class="default" width="115px">
-                <img src="icons/bills2.png" alt="Budget Hover" class="hover" width="115px">
+                <img src="icons/bills.png" alt="Bills" class="default" width="115px">
+                <img src="icons/bills2.png" alt="Bills Hover" class="hover" width="115px">
             </button>
             <button class="image-button" onclick="window.location.href='goal.html'">
-                <img src="icons/savingsgoal.png" alt="Budget" class="default" width="115px">
-                <img src="icons/savingsgoal2.png" alt="Budget Hover" class="hover" width="115px">
+                <img src="icons/savingsgoal.png" alt="Goal" class="default" width="115px">
+                <img src="icons/savingsgoal2.png" alt="Goal Hover" class="hover" width="115px">
             </button>
         </div>
     </div>
@@ -58,13 +61,8 @@
             const expenses = getExpenses();
             const summary = {};
             
-            // BREAK DOWN INTO INDIVIDUAL CATEGORIES
             expenses.forEach(exp => {
-                if (summary[exp.category]) {
-                    summary[exp.category] += exp.amount;
-                } else {
-                    summary[exp.category] = exp.amount;
-                }
+                summary[exp.category] = (summary[exp.category] || 0) + exp.amount;
             });
             
             const labels = Object.keys(summary);
@@ -75,13 +73,16 @@
                 return;
             }
             
+            const total = data.reduce((a, b) => a + b, 0);
+            const backgroundColors = ["#ffff84", "#36A2EB", "#FFCE56", "#8AFFC1", "#ff84cf", "#A66DD4"];
+            
             new Chart(document.getElementById("expenseChart"), {
                 type: "pie",
                 data: {
                     labels: labels,
                     datasets: [{
                         data: data,
-                        backgroundColor: ["#ffff84", "#36A2EB", "#FFCE56", "#8AFFC1", "#ff84cf", "#A66DD4"],
+                        backgroundColor: backgroundColors,
                         borderColor: "#fff",
                         borderWidth: 2
                     }]
@@ -90,40 +91,52 @@
                     responsive: false,
                     plugins: {
                         legend: {
-                            position: 'bottom'
-                        },
+                            display: false
+                        }
                     }
                 }
             });
+            
+            // Custom legend
+            const legendHTML = labels.map((label, i) => {
+                const percentage = ((data[i] / total) * 100).toFixed(1);
+                return `
+            <div style="display: flex; align-items: center; margin-bottom: 6px;">
+                <div style="width: 16px; height: 16px; background: ${backgroundColors[i]}; margin-right: 8px; border: 1px solid #000;"></div>
+                ${label} (${percentage}%)
+            </div>
+        `;
+            }).join("");
+            
+            document.getElementById("chartLegend").innerHTML = legendHTML;
         }
+        
+        
         
         function showExpenses() {
             const list = document.getElementById("expenseList");
             const expenses = getExpenses();
             const selectedCategory = document.getElementById("categoryFilter").value;
             
-            // Filter expenses by selected category (if one is selected)
             const filtered = selectedCategory
             ? expenses.filter(e => e.category === selectedCategory)
             : expenses;
             
-            // Sort by most recent date
             filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            // Get only the most recent 3
             const latest = filtered.slice(0, 3);
             
             if (latest.length === 0) {
-                list.innerHTML = "<p>No expenses to display.</p>";
+                list.innerHTML = "<p style='font-size: 1.3rem;'>No expenses to display.</p>";
                 return;
             }
             
             list.innerHTML = latest.map(e => `
-        <div style="border-bottom: 1px solid #ccc; padding: 8px;">
-            <strong>$${e.amount.toFixed(2)}</strong> - ${e.category}<br>
-            <small>${e.description || "No description"}<br>${new Date(e.date).toLocaleString()}</small>
+        <div style="border: 1px solid #ccc; border-radius: 10px; padding: 12px; margin-bottom: 12px; background: #f9f9f9;">
+          <div style="font-size: 1.8rem; font-weight: bold;">$${e.amount.toFixed(2)} - ${e.category}</div>
+          <div style="font-size: 1.2rem; margin-top: 4px;">${e.description || "No description"}</div>
+          <div style="font-size: 1rem; color: #666; margin-top: 4px;">${new Date(e.date).toLocaleString()}</div>
         </div>
-    `).join('');
+      `).join('');
         }
         
         function populateCategoryFilter() {
@@ -145,13 +158,7 @@
             populateCategoryFilter();
             showExpenses();
         };
-        
-        
-        window.onload = function () {
-            drawChart();
-            populateCategoryFilter();
-            showExpenses();
-        };
     </script>
 </body>
+
 </html>
